@@ -2,16 +2,13 @@ package com.thoughtworks.library;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
+import org.junit.Before;
 import org.junit.Test;
-
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.mockito.Matchers.contains;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class LibraryTest {
 
@@ -21,32 +18,39 @@ public class LibraryTest {
         List books tests. Implement the first three tests for the Verify exercise
 
      */
+    PrintStream printStream;
+    DateTimeFormatter dateTimeFormatter;
+    List<String> books;
+    Library library;
 
+    @Before
+    public void setUp(){
+        books = new ArrayList<>();
+        String title = "Book Title";
+        books.add(title);
+        printStream = mock(PrintStream.class);
+        dateTimeFormatter = mock(DateTimeFormatter.class);
+        library = new Library(books, printStream, dateTimeFormatter);
+    }
 
     @Test
     public void shouldPrintBookTitleWhenThereIsOneBook() {
-
-        List<String> books = new ArrayList<>();
-        String title = "Book Title";
-        books.add(title);
-        PrintStream printStream = mock(PrintStream.class);
-        Library library = new Library(books, printStream, null);
-
         library.listBooks();
-
-        // add a verify statement here that shows that the book title was printed by to the printStream
+        verify(printStream).println("Book Title");
     }
 
     @Test
     public void shouldPrintNothingWhenThereAreNoBooks() {
-
-        // implement me
+        Library library = new Library(new ArrayList<String>(0),printStream,null);
+        library.listBooks();
+        verifyZeroInteractions(printStream);
     }
 
     @Test
     public void shouldPrintBothBookTitlesWhenThereAreTwoBooks() {
-
-        // implement me
+        books.add("Second Book");
+        library.listBooks();
+        verify(printStream, times(2)).println(anyString());
     }
 
     /*
@@ -75,18 +79,10 @@ public class LibraryTest {
     
     @Test
     public void shouldDisplayFormattedTime() {
-        List<String> books = new ArrayList<>();
-        PrintStream printStream = mock(PrintStream.class);
         DateTime time = new DateTime();
-        DateTimeFormatter dateTimeFormatter = mock(DateTimeFormatter.class);
-
         when(dateTimeFormatter.print(time)).thenReturn("FormattedTimeString");
-
-        Library library = new Library(books, printStream, dateTimeFormatter);
-
         library.welcome(time);
-
-        // add a verify here
+        verify(dateTimeFormatter).print(time);
     }
 
     @Test
