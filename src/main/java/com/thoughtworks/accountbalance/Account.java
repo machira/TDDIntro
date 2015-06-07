@@ -4,20 +4,21 @@ package com.thoughtworks.accountbalance;
  * Created by machira on 6/7/15.
  */
 public class Account {
-    int balance;
+    double balance;
 
-    Account(int balance){
+    Account(double balance){
         this.balance = balance;
     }
 
-    public void deposit(int deposit){
+    public double deposit(double deposit){
         balance += deposit;
+        return balance;
     }
 
-    public void withdraw(int withdraw){
-        if (withdraw > balance){
-            return;
+    public double withdraw(double withdraw){
+        if (withdraw < balance){
+            balance -= withdraw;
         }
-        balance -= withdraw;
+        return balance;
     }
 }
